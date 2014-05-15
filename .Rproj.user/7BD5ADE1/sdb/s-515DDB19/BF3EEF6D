@@ -1,0 +1,17 @@
+{
+    "contents" : "data=read.csv(\"repdata-data-StormData.csv\")\ntail(data)\nstr(data)\nattach(data)\nlibrary(lubridate)\n\nresult=tapply(FATALITIES,EVTYPE,sum)\nresult2=tapply(INJURIES,EVTYPE,sum)\nresult3=tapply(PROPDMG,EVTYPE,sum)\nresult4=tapply(CROPDMG,EVTYPE,sum)\n\ndata$start=mdy_hms(data$BGN_DATE)\n\nresult5=xtabs(~EVTYPE+month(data$start),data=data)\nhead(result5)\nclass(result5)\nresult5=addmargins(result5)\ntail(result5)\nstr(result5)\n\nresult6=data.frame(result5)\nstr(result6)\nhead(result6)\nresult6=result5[order(result5$sum,decreasing=TRUE),]\nhead(result6)\nstart=mdy_hms(data[,\"BGN_DATE\"])\nyear(start)\nmonth(start)\n\ndate=as.POSIXct(as.character(data[1,\"BGN_DATE\"]))\n\n\ndata1=data.frame(FATALITIES=result,INJURIES=result2,\n                 PROPDMG=result3,CROPDMG=result4)\nhead(data1)\nstr(data1)\ncolnames(data1)\ndata1=data1[order(data1$FATALITIES,data1$INJURIES,decreasing=TRUE),]\nhead(data1)\ndata2=data1[order(data1$PROPDMG,data1$CROPDMG,decreasing=TRUE),]\nhead(data2)\ndata2$DMG=data2$PROPDMG+data2$CROPDMG\ndata3=data2[order(data2$DMG,decreasing=TRUE),]\nhead(data3)\n\nplot(FATALITIES+INJURIES,data=head(data1))\n\nhealth=head(data1,10)\nhealth    \nclass(health)\nstr(health)\ncolnames(health)\nrownames(health)\nhealth$event=factor(rownames(health),levels=rownames(health))\nqplot(health$event,health$FATALITIES,geom=\"bar\",stat=\"identity\")\nggplot(health,aes(x=event,y=FATALITIES)) +geom_bar(stat=\"identity\")\nplot(FATALITIES+INJURIES,data=health)\nbarplot(health$FATALITIES,col=\"red\")    \nbarplot(health$INJURIES)    \n\nbarplot(as.matrix(t(health[,1:2])),beside=TRUE)\nlibrary(ggplot2)\nlibrary(lattice)\nlibrary(reshape)\nggplot(health,aes(x=event,y=FATALITIES)) +geom_bar(stat=\"identity\")\nggplot(health,aes(x=event,y=INJURIES)) +geom_bar(stat=\"identity\")\nbarchart(FATALITIES~event,data=health,scales=list(x=list(rot=45)))\nbarchart(INJURIES~event,data=health,scales=list(x=list(rot=45)))\n\nbarchart(FATALITIES~event,data=health,scales=list(x=list(rot=45)))\nbarchart(INJURIES~event,data=health,scales=list(x=list(rot=45)))\nhealth\nmeltedhealth=melt(health,id=\"event\")\nmeltedhealth\nbarchart(value~event|variable,data=meltedhealth[1:20,],ylab=\"\",\n         scales=list(relation=\"free\",x=list(rot=45)))\n\nbarchart(value~event|variable,data=meltedhealth[1:20,],ylab=\"\",layout=c(1,2),\n         scales=list(relation=\"free\",x=list(rot=45)))\n\nbarchart(value/1000~event|variable,data=meltedhealth[21:40,],ylab=\"\",\n         scales=list(x=list(rot=45)))",
+    "created" : 1399944887944.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "325223235",
+    "id" : "BF3EEF6D",
+    "lastKnownWriteTime" : 1400039062,
+    "path" : "~/Documents/DaumCloud/R-project/coursera/Reproducible Research/RepData_PeerAssessment2/Untitled.R",
+    "project_path" : "Untitled.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
